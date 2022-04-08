@@ -7,7 +7,5 @@ public class InGroupsDto
 {
     public List<string> GroupIds { get; set; }
     
-    public AuthDto Auth { get; set; }
-    
     public SortType SortType { get; set; }
 }

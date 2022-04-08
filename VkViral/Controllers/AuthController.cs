@@ -22,17 +22,17 @@ public class AuthController : Controller
     [HttpGet("Authorize")]
     public async Task<IActionResult> Authorize(Uri redirectUri, string code)
     {
-        var result = await _auth.GetToken(redirectUri, code);
-        if (result == null)
+        var result = await _auth.Authorize(redirectUri, code, HttpContext.Response);
+        if (result == false)
             return BadRequest();
         
-        return Ok(result);
+        return Ok();
     }
     
     [HttpGet("User")]
-    public async Task<IActionResult> CurrentUser(int tokenId)
+    public async Task<IActionResult> CurrentUser()
     {
-        var vk = await _vk.GetClientAsync(tokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
         

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using VkNet;
 using VkNet.Model;
 using VkViral.Data;
+using VkViral.Helpers;
 
 namespace VkViral.Services;
 
@@ -16,10 +17,14 @@ public class VkService
         _db = db;
     }
 
-    public async Task<VkApi?> GetClientAsync(int tokenId)
+    public async Task<VkApi?> GetClientAsync(HttpRequest request)
     {
-        var token = await _db.Tokens.FirstOrDefaultAsync(x => x.Id == tokenId);
-        if (token == null)
+        var cookie = CookieHelper.Get(request);
+        if (cookie == null)
+            return null;
+        
+        var token = await _db.Tokens.FirstOrDefaultAsync(x => x.Id == cookie.TokenId);
+        if (token == null || token.UserId != cookie.UserId || token.ExpirationTime != cookie.ExpirationTime)
             return null;
         
         var decryptedToken = _encryptor.Decrypt(token.Value);

@@ -29,7 +29,7 @@ public class PostsController : Controller
     [HttpPost("InGroup")]
     public async Task<IActionResult> InGroup([FromBody]InGroupDto dto)
     {
-        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
 
@@ -42,7 +42,7 @@ public class PostsController : Controller
     [HttpPost("InGroups")]
     public async Task<IActionResult> InGroups([FromBody]InGroupsDto dto)
     {
-        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
 
@@ -57,7 +57,7 @@ public class PostsController : Controller
     [HttpPost("InCurrentUser")]
     public async Task<IActionResult> InCurrentUser([FromBody]InCurrentUserDto dto)
     {
-        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
 

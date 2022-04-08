@@ -24,9 +24,9 @@ public class GroupsController : Controller
     }
 
     [HttpPost("CurrentUser")]
-    public async Task<IActionResult> Get([FromBody]AuthDto input)
+    public async Task<IActionResult> Get()
     {
-        var vk = await _vk.GetClientAsync(input.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
         
@@ -37,9 +37,9 @@ public class GroupsController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetById(string groupId, [FromBody]AuthDto input)
+    public async Task<IActionResult> GetById(string groupId)
     {
-        var vk = await _vk.GetClientAsync(input.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
 
@@ -52,7 +52,7 @@ public class GroupsController : Controller
     [HttpPost("Ids")]
     public async Task<IActionResult> GetByIds([FromBody]ByIdsDto dto)
     {
-        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
 
@@ -65,7 +65,7 @@ public class GroupsController : Controller
     [HttpPost("Activity")]
     public async Task<IActionResult> GetByActivity([FromBody]ByActivityDto dto)
     {
-        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
 
@@ -78,7 +78,7 @@ public class GroupsController : Controller
     [HttpPost("Query")]
     public async Task<IActionResult> GetByQuery([FromBody]ByQueryDto dto)
     {
-        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
         if (vk == null)
             return Unauthorized();
 

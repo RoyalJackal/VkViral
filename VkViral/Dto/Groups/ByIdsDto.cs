@@ -5,6 +5,4 @@ namespace VkViral.Dto.Groups;
 public class ByIdsDto
 {
     public List<string> GroupIds { get; set; }
-    
-    public AuthDto Auth { get; set; }
 }

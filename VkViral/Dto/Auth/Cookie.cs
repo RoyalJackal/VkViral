@@ -1,6 +1,6 @@
 namespace VkViral.Dto.Auth;
 
-public class AuthDto
+public class Cookie
 {
     public int TokenId { get; set; }
 

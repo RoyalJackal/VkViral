@@ -22,10 +22,10 @@ public class AuthService
         _encryptor = encryptor;
         _db = db;
     }
-    public async Task<AuthDto?> GetToken(Uri redirectUri, string code)
+    public async Task<bool> Authorize(Uri redirectUri, string code, HttpResponse response)
     {
         var httpClient = HttpClientHelper.GetClient();
-        var response = await httpClient.SendAsync(new HttpRequestMessage(
+        var tokenResponse = await httpClient.SendAsync(new HttpRequestMessage(
             HttpMethod.Get,
             $@"{TokenPath}?" + 
             $@"client_id={_configuration["Application:Id"]}&" +
@@ -33,7 +33,7 @@ public class AuthService
             $@"redirect_uri={redirectUri}&" + 
             $@"code={code}"));
         
-        var contentStream = await response.Content.ReadAsStreamAsync();
+        var contentStream = await tokenResponse.Content.ReadAsStreamAsync();
         
         using var streamReader = new StreamReader(contentStream);
         using var jsonReader = new JsonTextReader(streamReader);
@@ -52,17 +52,14 @@ public class AuthService
             await _db.SaveChangesAsync();
 
             var dbToken = _db.Tokens.FirstOrDefault(x => x.UserId == dto.UserId);
-            return new AuthDto
-            {
-                TokenId = dbToken.Id,
-                ExpirationTime = dbToken.ExpirationTime,
-                UserId = dbToken.UserId
-            };
+            CookieHelper.Set(response, dbToken);
+
+            return true;
         }
         catch(JsonReaderException)
         {
             Console.WriteLine("Invalid JSON.");
-            return null;
+            return false;
         } 
     }
 
