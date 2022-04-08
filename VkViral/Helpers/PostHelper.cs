@@ -1,6 +1,6 @@
 using VkNet.Model;
 using VkNet.Model.Attachments;
-using VkViral.Dto.Groups;
+using VkViral.Dto.Posts;
 using VkViral.Enum;
 
 namespace VkViral.Helpers;
@@ -50,10 +50,10 @@ public static class PostHelper
             Audios = post.Attachments
                 .Where(x => x.Type == typeof(Audio)).Select(x => ((Audio) x.Instance).Url)
                 .ToList(),
-            Likes = post.Likes.Count,
-            Comments = post.Comments.Count,
-            Reposts = post.Reposts.Count,
-            Views = post.Views.Count,
+            Likes = post.Likes?.Count ?? 0,
+            Comments = post.Comments?.Count ?? 0,
+            Reposts = post.Reposts?.Count ?? 0,
+            Views = post.Views?.Count ?? 0,
             GroupPostCount = (int)groupPosts,
             GroupMemberCount = group.MembersCount
         };

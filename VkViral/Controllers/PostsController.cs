@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using VkViral.Data;
+using VkNet;
+using VkViral.Dto.Auth;
 using VkViral.Dto.Groups;
+using VkViral.Dto.Posts;
 using VkViral.Enum;
 using VkViral.Helpers;
+using VkViral.Model;
 using VkViral.Services;
 
 namespace VkViral.Controllers;
@@ -12,30 +15,58 @@ namespace VkViral.Controllers;
 [ApiController]
 public class PostsController : Controller
 {
-    private readonly EncryptionService _encryptor;
     private readonly PostsService _posts;
-    private readonly ApplicationDbContext _db;
+    private readonly VkService _vk;
+    private readonly GroupsService _groups;
 
-    public PostsController(EncryptionService encryptor, PostsService posts, ApplicationDbContext db)
+    public PostsController(PostsService posts, VkService vk, GroupsService groups)
     {
-        _encryptor = encryptor;
         _posts = posts;
-        _db = db;
+        _vk = vk;
+        _groups = groups;
     }
 
-    [HttpGet("InGroup")]
-    public async Task<IActionResult> InGroup(string groupId, int tokenId, SortType sortType)
+    [HttpPost("InGroup")]
+    public async Task<IActionResult> InGroup([FromBody]InGroupDto dto)
     {
-        var token = await _db.Tokens.FirstOrDefaultAsync(x => x.Id == tokenId);
-        if (token == null)
-            return Unauthorized();     
-        
-        var decryptedToken = _encryptor.Decrypt(token.Value);
-        var vk = await VkHelper.GetClientAsync(decryptedToken);
+        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        if (vk == null)
+            return Unauthorized();
 
-        var result = await _posts.GetPostsInGroupAsync(vk, groupId);
+        var result = await _posts.GetPostsInGroupAsync(vk, dto.GroupId);
 
         await vk.LogOutAsync();
-        return Ok(PostHelper.Sort(result, sortType));
+        return Ok(PostHelper.Sort(result, dto.SortType));
+    }
+    
+    [HttpPost("InGroups")]
+    public async Task<IActionResult> InGroups([FromBody]InGroupsDto dto)
+    {
+        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        if (vk == null)
+            return Unauthorized();
+
+        var result = new List<PostDto>();
+        foreach (var groupId in dto.GroupIds)
+            result.AddRange(await _posts.GetPostsInGroupAsync(vk, groupId));
+
+        await vk.LogOutAsync();
+        return Ok(PostHelper.Sort(result, dto.SortType));
+    }
+    
+    [HttpPost("InCurrentUser")]
+    public async Task<IActionResult> InCurrentUser([FromBody]InCurrentUserDto dto)
+    {
+        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        if (vk == null)
+            return Unauthorized();
+
+        var groups = await _groups.GetByCurrentUserAsync(vk, 10);
+        var result = new List<PostDto>();
+        foreach (var group in groups)
+            result.AddRange(await _posts.GetPostsInGroupAsync(vk, group.GroupId.ToString()));
+
+        await vk.LogOutAsync();
+        return Ok(PostHelper.Sort(result, dto.SortType));
     }
 }

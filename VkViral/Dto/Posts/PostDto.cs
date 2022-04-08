@@ -1,4 +1,4 @@
-namespace VkViral.Dto.Groups;
+namespace VkViral.Dto.Posts;
 
 public class PostDto
 {

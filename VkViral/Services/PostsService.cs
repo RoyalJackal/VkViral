@@ -2,13 +2,14 @@ using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Model.RequestParams;
 using VkViral.Dto.Groups;
+using VkViral.Dto.Posts;
 using VkViral.Helpers;
 
 namespace VkViral.Services;
 
 public class PostsService
 {
-    public async Task<List<PostDto>> GetPostsInGroupAsync(VkApi vk, string groupId)
+    public async Task<List<PostDto>> GetPostsInGroupAsync(VkApi? vk, string groupId)
     {
         var group = vk.Groups.GetById(new List<string>(), groupId, GroupsFields.All).FirstOrDefault();
         if (group == null)

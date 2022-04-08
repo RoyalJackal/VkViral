@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using VkNet.Model;
 using VkViral.Data;
 using VkViral.Services;
 
@@ -31,6 +30,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<EncryptionService>();
 builder.Services.AddScoped<GroupsService>();
 builder.Services.AddScoped<PostsService>();
+builder.Services.AddScoped<VkService>();
 
 var app = builder.Build();
 

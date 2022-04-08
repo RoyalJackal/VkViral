@@ -1,4 +1,7 @@
 using Newtonsoft.Json;
+using VkNet;
+using VkNet.Enums.Filters;
+using VkNet.Model;
 using VkViral.Data;
 using VkViral.Dto.Auth;
 using VkViral.Helpers;
@@ -62,4 +65,10 @@ public class AuthService
             return null;
         } 
     }
+
+    public async Task<UserDto?> GetCurrentUser(VkApi vk) =>
+        (await vk.Users
+            .GetAsync(new List<long>(), ProfileFields.Photo200))
+            .Select(UserHelper.Map)
+            .FirstOrDefault();
 }

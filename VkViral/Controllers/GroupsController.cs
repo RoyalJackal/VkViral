@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Model.RequestParams;
-using VkViral.Data;
+using VkViral.Dto.Auth;
 using VkViral.Dto.Groups;
 using VkViral.Helpers;
 using VkViral.Services;
@@ -13,26 +14,21 @@ namespace VkViral.Controllers;
 [ApiController]
 public class GroupsController : Controller
 {
-    private readonly EncryptionService _encryptor;
     private readonly GroupsService _groups;
-    private readonly ApplicationDbContext _db;
+    private readonly VkService _vk;
 
-    public GroupsController(EncryptionService encryptor, GroupsService groups, ApplicationDbContext db)
+    public GroupsController(GroupsService groups, VkService vk)
     {
-        _encryptor = encryptor;
         _groups = groups;
-        _db = db;
+        _vk = vk;
     }
 
-    [HttpGet("CurrentUser")]
-    public async Task<IActionResult> Get(int tokenId)
+    [HttpPost("CurrentUser")]
+    public async Task<IActionResult> Get([FromBody]AuthDto input)
     {
-        var token = await _db.Tokens.FirstOrDefaultAsync(x => x.Id == tokenId);
-        if (token == null)
+        var vk = await _vk.GetClientAsync(input.TokenId);
+        if (vk == null)
             return Unauthorized();
-        
-        var decryptedToken = _encryptor.Decrypt(token.Value);
-        var vk = await VkHelper.GetClientAsync(decryptedToken);
         
         var result = await _groups.GetByCurrentUserAsync(vk);
         
@@ -40,17 +36,53 @@ public class GroupsController : Controller
         return Ok(result);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetById(string groupId, int tokenId)
+    [HttpPost]
+    public async Task<IActionResult> GetById(string groupId, [FromBody]AuthDto input)
     {
-        var token = await _db.Tokens.FirstOrDefaultAsync(x => x.Id == tokenId);
-        if (token == null)
+        var vk = await _vk.GetClientAsync(input.TokenId);
+        if (vk == null)
             return Unauthorized();
-        
-        var decryptedToken = _encryptor.Decrypt(token.Value);
-        var vk = await VkHelper.GetClientAsync(decryptedToken);
 
         var result = await _groups.GetByIdAsync(vk, groupId);
+        
+        await vk.LogOutAsync();
+        return Ok(result);
+    }
+    
+    [HttpPost("Ids")]
+    public async Task<IActionResult> GetByIds([FromBody]ByIdsDto dto)
+    {
+        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        if (vk == null)
+            return Unauthorized();
+
+        var result = await _groups.GetByIdsAsync(vk, dto.GroupIds);
+        
+        await vk.LogOutAsync();
+        return Ok(result);
+    }
+    
+    [HttpPost("Activity")]
+    public async Task<IActionResult> GetByActivity([FromBody]ByActivityDto dto)
+    {
+        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        if (vk == null)
+            return Unauthorized();
+
+        var result = await _groups.GetByActivityAsync(vk, dto.Activity, dto.Query);
+        
+        await vk.LogOutAsync();
+        return Ok(result);
+    }
+    
+    [HttpPost("Query")]
+    public async Task<IActionResult> GetByQuery([FromBody]ByQueryDto dto)
+    {
+        var vk = await _vk.GetClientAsync(dto.Auth.TokenId);
+        if (vk == null)
+            return Unauthorized();
+
+        var result = await _groups.GetByQueryAsync(vk, dto.Query);
         
         await vk.LogOutAsync();
         return Ok(result);
