@@ -43,6 +43,7 @@ public class AuthService
         try
         {
             var dto = serializer.Deserialize<VkTokenDto>(jsonReader);
+            _db.Tokens.RemoveRange(_db.Tokens.Where(x => x.UserId == dto.UserId));
             await _db.Tokens.AddAsync(new Token
             {
                 Value = _encryptor.Encrypt(dto.AccessToken),

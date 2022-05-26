@@ -1,7 +1,6 @@
 using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Model.RequestParams;
-using VkViral.Dto.Groups;
 using VkViral.Dto.Posts;
 using VkViral.Helpers;
 

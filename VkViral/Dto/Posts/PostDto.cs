@@ -24,6 +24,8 @@ public class PostDto
     
     public int Views { get; set; }
     
+    public double Virality { get; set; }
+    
     public int GroupPostCount { get; set; }
     
     public int? GroupMemberCount { get; set; }

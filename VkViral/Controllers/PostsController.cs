@@ -1,12 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VkNet;
-using VkViral.Dto.Auth;
-using VkViral.Dto.Groups;
 using VkViral.Dto.Posts;
-using VkViral.Enum;
-using VkViral.Helpers;
-using VkViral.Model;
 using VkViral.Services;
 
 namespace VkViral.Controllers;
@@ -18,12 +11,14 @@ public class PostsController : Controller
     private readonly PostsService _posts;
     private readonly VkService _vk;
     private readonly GroupsService _groups;
+    private readonly SortingService _sorting;
 
-    public PostsController(PostsService posts, VkService vk, GroupsService groups)
+    public PostsController(PostsService posts, VkService vk, GroupsService groups, SortingService sorting)
     {
         _posts = posts;
         _vk = vk;
         _groups = groups;
+        _sorting = sorting;
     }
 
     [HttpPost("InGroup")]
@@ -36,7 +31,7 @@ public class PostsController : Controller
         var result = await _posts.GetPostsInGroupAsync(vk, dto.GroupId);
 
         await vk.LogOutAsync();
-        return Ok(PostHelper.Sort(result, dto.SortType));
+        return Ok(await _sorting.SortAsync(result, dto.SortType));
     }
     
     [HttpPost("InGroups")]
@@ -51,7 +46,7 @@ public class PostsController : Controller
             result.AddRange(await _posts.GetPostsInGroupAsync(vk, groupId));
 
         await vk.LogOutAsync();
-        return Ok(PostHelper.Sort(result, dto.SortType));
+        return Ok(await _sorting.SortAsync(result, dto.SortType));
     }
     
     [HttpPost("InCurrentUser")]
@@ -67,6 +62,6 @@ public class PostsController : Controller
             result.AddRange(await _posts.GetPostsInGroupAsync(vk, group.GroupId.ToString()));
 
         await vk.LogOutAsync();
-        return Ok(PostHelper.Sort(result, dto.SortType));
+        return Ok(await _sorting.SortAsync(result, dto.SortType));
     }
 }

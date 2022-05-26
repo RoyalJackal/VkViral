@@ -1,11 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VkNet;
-using VkNet.Enums.Filters;
-using VkNet.Model.RequestParams;
-using VkViral.Dto.Auth;
 using VkViral.Dto.Groups;
-using VkViral.Helpers;
 using VkViral.Services;
 
 namespace VkViral.Controllers;

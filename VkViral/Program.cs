@@ -31,6 +31,8 @@ builder.Services.AddScoped<EncryptionService>();
 builder.Services.AddScoped<GroupsService>();
 builder.Services.AddScoped<PostsService>();
 builder.Services.AddScoped<VkService>();
+builder.Services.AddScoped<PredictionService>();
+builder.Services.AddScoped<SortingService>();
 
 var app = builder.Build();
 

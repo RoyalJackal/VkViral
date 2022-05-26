@@ -1,7 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VkNet;
-using VkViral.Helpers;
 using VkViral.Services;
 
 namespace VkViral.Controllers;

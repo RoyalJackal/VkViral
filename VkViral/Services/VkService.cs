@@ -24,7 +24,7 @@ public class VkService
             return null;
         
         var token = await _db.Tokens.FirstOrDefaultAsync(x => x.Id == cookie.TokenId);
-        if (token == null || token.UserId != cookie.UserId || token.ExpirationTime != cookie.ExpirationTime)
+        if (token == null || token.UserId != cookie.UserId || token.ExpirationTime.Equals(cookie.ExpirationTime))
             return null;
         
         var decryptedToken = _encryptor.Decrypt(token.Value);

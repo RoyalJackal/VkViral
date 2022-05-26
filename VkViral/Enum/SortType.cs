@@ -8,5 +8,6 @@ public enum SortType
     WeighedViews,
     Size,
     PublicationDate,
-    Media
+    Media,
+    Predicted
 }
