@@ -21,7 +21,9 @@ public static class CookieHelper
         response.Cookies.Append(CookieName, cookieJson, new CookieOptions
         {
             Expires = token.ExpirationTime,
-            IsEssential = true
+            IsEssential = true,
+            SameSite = SameSiteMode.None,
+            Secure = true
         });
     }
 

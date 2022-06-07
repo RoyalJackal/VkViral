@@ -36,7 +36,21 @@ public class AuthController : Controller
         var result = await _auth.GetCurrentUser(vk);
         if (result == null)
             return BadRequest();
+
+        await vk.LogOutAsync();
+        return Ok(result);
+    }
+
+    [HttpGet("Activities")]
+    public async Task<IActionResult> Activities()
+    {
+        var vk = await _vk.GetClientAsync(HttpContext.Request);
+        if (vk == null)
+            return Unauthorized();
         
+        var result = await _auth.GetActivities(vk);
+
+        await vk.LogOutAsync();
         return Ok(result);
     }
 }

@@ -1,0 +1,33 @@
+<cdk-virtual-scroll-viewport itemSize="300" class="example-viewport" xmlns="http://www.w3.org/1999/html">
+  <div *cdkVirtualFor="let post of posts">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <img mat-card-avatar src="{{post.groupImg}}" alt="">
+        <mat-card-title>{{post.groupName}}</mat-card-title>
+        <mat-card-subtitle>{{post.publicationDate | date:"dd/MM/yy HH:mm" }}</mat-card-subtitle>
+      </mat-card-header>
+      <app-media-box mat-card-image [post]="post"></app-media-box>
+      <mat-card-content>
+        <div *ngIf="post.virality == 0">
+          <p>
+            <mat-icon>thumb_up</mat-icon>{{post.likes}}
+            <mat-icon>share</mat-icon>{{post.reposts}}
+            <mat-icon>comment</mat-icon>{{post.comments}}
+            <mat-icon>remove_red_eye</mat-icon>{{post.views}}
+          </p>
+        </div>
+        <div *ngIf="post.virality != 0">
+          <p>
+            <mat-icon>whatshot</mat-icon>{{post.virality}}
+          </p>
+        </div>
+        <p>
+          {{post.text}}
+        </p>
+        <div *ngIf="post.images[0]">
+          <img mat-card-xl-image src="{{post.images[0]}}" alt="">
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</cdk-virtual-scroll-viewport>

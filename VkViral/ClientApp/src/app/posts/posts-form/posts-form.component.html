@@ -1,0 +1,17 @@
+<mat-form-field appearance="fill">
+  <mat-label>Сортировка</mat-label>
+  <mat-select [(value)]="sortType">
+    <mat-option value="Likes">По лайкам</mat-option>
+    <mat-option value="Views">По просмотрам</mat-option>
+    <mat-option value="WeighedLikes">По лайкам на подписчиков</mat-option>
+    <mat-option value="WeighedViews">По просмотрам на подписчиков</mat-option>
+    <mat-option value="Size">По длине текста</mat-option>
+    <mat-option value="PublicationDate">По дате публикации</mat-option>
+    <mat-option value="Media">По наличию медиа</mat-option>
+    <mat-option value="Predicted">По предсказанной вирусности</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<button id="basic" type="button" mat-button [disabled]="noGroupsSelected()" (click)="clicked()">
+  Искать
+</button>

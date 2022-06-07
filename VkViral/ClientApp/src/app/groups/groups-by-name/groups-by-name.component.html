@@ -1,0 +1,20 @@
+<mat-form-field class="example-chip-list" appearance="fill">
+  <mat-label>Идентификаторы групп</mat-label>
+  <mat-chip-list #chipList aria-label="Fruit selection">
+    <mat-chip *ngFor="let id of ids" (removed)="remove(id)">
+      {{id.value}}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+    <input placeholder="Введите инденификатор..."
+           [matChipInputFor]="chipList"
+           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputAddOnBlur]="addOnBlur"
+           (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+</mat-form-field>
+
+<button id="basic" type="button" mat-button [disabled]="ids.length == 0" (click)="clicked()">
+  Искать
+</button>

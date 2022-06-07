@@ -1,0 +1,8 @@
+<mat-form-field style="width: 100%" appearance="fill">
+  <mat-label>Название</mat-label>
+  <input matInput type="text" [(ngModel)]="query">
+</mat-form-field>
+
+<button id="basic" type="button" mat-button [disabled]="query == ''" (click)="clicked()">
+  Искать
+</button>

@@ -51,9 +51,10 @@ public class GroupsService
                 .SearchAsync(new GroupsSearchParams
                 {
                     Count = 1000,
-                    Query = query
+                    Query = query == "" ? "а" : query
                 }))
             .ToList();
+        
         return (await vk.Groups
                 .GetByIdAsync(groups.Select(x => x.Id.ToString()), null, GroupsFields.Activity))
             .Where(x => x.Activity == activity)
@@ -67,9 +68,10 @@ public class GroupsService
                 .SearchAsync(new GroupsSearchParams
                 {
                     Count = 1000,
-                    Query = query
+                    Query = query == "" ? "а" : query
                 }))
             .ToList();
+        
         return (await vk.Groups
                 .GetByIdAsync(groups.Select(x => x.Id.ToString()), null, GroupsFields.Activity))
             .Select(GroupHelper.Map)

@@ -1,0 +1,7 @@
+<img *ngfor="let image in post.images" src="{{image}}" alt="">
+<ng-template *ngFor="let video in post.videos">
+  <img src="{{video}}" alt="">
+</ng-template>
+<ng-template *ngFor="let audio in post.audios">
+  <audio controls src="{{audio}}"></audio>
+</ng-template>

@@ -1,0 +1,70 @@
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Create three unequal columns that floats next to each other */
+  .column {
+    float: left;
+    padding: 10px;
+    height: 829px;
+  }
+
+  .left, .right {
+    width: 25%;
+  }
+
+  .middle {
+    width: 50%;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .header {
+    width: 100%;
+  }
+</style>
+
+
+<div *ngIf="!isLoggedIn()">
+  <div style="margin: 0; height: 937px; background-color: #aaa">
+    <div style="position:absolute;
+    left:50%;
+    top:50%;">
+      <app-login-page></app-login-page>
+    </div>
+  </div>
+</div>
+<div *ngIf="isLoggedIn()">
+  <div class="header" style="background-color:#bbb; border-bottom: 1px solid #aaa;">
+    <app-user-box></app-user-box>
+  </div>
+  <div class="row">
+    <div class="column left" style="background-color:#aaa;">
+      <mat-button-toggle-group #group="matButtonToggleGroup">
+        <mat-button-toggle value="groups" aria-label="Поиск групп">
+          Поиск групп
+        </mat-button-toggle>
+        <mat-button-toggle value="posts" [disabled]="noGroupsSelected()" aria-label="Поиск постов">
+          Поиск постов
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <div *ngIf="group.value == 'groups'">
+        <app-groups-form></app-groups-form>
+      </div>
+      <div *ngIf="group.value == 'posts'">
+        <app-posts-form></app-posts-form>
+      </div>
+    </div>
+    <div class="column middle" style="background-color:#bbb;">
+      <app-post-list></app-post-list>
+    </div>
+    <div class="column right" style="background-color:#aaa;">
+      <app-group-list></app-group-list>
+    </div>
+  </div>
+</div>

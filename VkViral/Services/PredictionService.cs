@@ -33,7 +33,7 @@ public class PredictionService
             var values = serializer.Deserialize<List<double>>(jsonReader);
 
             for (int i = 0; i < posts.Count; i++)
-                posts[i].Virality = values[i];
+                posts[i].Virality = values[i] / 1000;
 
             return posts;
         }

@@ -1,0 +1,26 @@
+<mat-form-field style="width: 100%" appearance="fill">
+  <mat-label>Тип поиска</mat-label>
+  <mat-select [(value)]="selected">
+    <mat-option value="byId">По ID</mat-option>
+    <mat-option value="byQuery">По названию</mat-option>
+    <mat-option value="byActivity">По тематике</mat-option>
+    <mat-option value="bySubscription">По подписке</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<ng-container *ngIf="selected == 'byId'">
+  <app-groups-by-name></app-groups-by-name>
+</ng-container>
+
+<ng-container *ngIf="selected == 'byQuery'">
+  <app-groups-by-query></app-groups-by-query>
+</ng-container>
+
+<ng-container *ngIf="selected == 'byActivity'">
+  <app-groups-by-activity></app-groups-by-activity>
+</ng-container>
+
+<ng-container *ngIf="selected == 'bySubscription'">
+  <app-groups-by-user></app-groups-by-user>
+</ng-container>
+

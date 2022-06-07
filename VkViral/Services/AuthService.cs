@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using VkNet;
 using VkNet.Enums.Filters;
-using VkNet.Model;
+using VkNet.Model.RequestParams;
 using VkViral.Data;
 using VkViral.Dto.Auth;
 using VkViral.Helpers;
@@ -69,4 +69,23 @@ public class AuthService
             .GetAsync(new List<long>(), ProfileFields.Photo200))
             .Select(UserHelper.Map)
             .FirstOrDefault();
+
+    public async Task<List<string>> GetActivities(VkApi vk)
+    {
+        var groups = (await vk.Groups
+                .SearchAsync(new GroupsSearchParams
+                {
+                    Count = 1000,
+                    Query = "а"
+                }))
+            .ToList();
+
+        return (await vk.Groups
+                .GetByIdAsync(groups.Select(x => x.Id.ToString()), null, GroupsFields.Activity))
+            .Select(x => x.Activity)
+            .Distinct()
+            .Where(x => x != "" && !char.IsDigit(x[0]))
+            .ToList();
+    }
+        
 }

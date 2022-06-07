@@ -1,0 +1,22 @@
+<mat-form-field class="example-form-field" appearance="fill">
+  <mat-label>Поиск</mat-label>
+  <input matInput type="text" [(ngModel)]="query">
+  <button *ngIf="query" matSuffix mat-icon-button aria-label="Clear" (click)="query=''">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+<cdk-virtual-scroll-viewport itemSize="100" class="example-viewport">
+  <div *cdkVirtualFor="let group of groups | search:query">
+    <mat-card class="example-card">
+      <mat-card-title-group>
+        <mat-card-title>{{group.groupName}}</mat-card-title>
+        <mat-card-subtitle>{{group.groupTheme}}</mat-card-subtitle>
+        <img mat-card-sm-image src="{{group.groupImg}}"  alt="Аватар группы">
+      </mat-card-title-group>
+      <mat-checkbox (click)="$event.stopPropagation()"
+                    (change)="$event ? toggleGroup(group) : null"
+                    [checked]="isGroupSelected(group)">
+      </mat-checkbox>
+    </mat-card>
+  </div>
+</cdk-virtual-scroll-viewport>
